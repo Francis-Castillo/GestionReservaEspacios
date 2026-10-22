@@ -4,14 +4,7 @@ import dao.fcsv.DepartamentoDAOCSV;
 import dao.fcsv.EspacioDAOCSV;
 import dao.fcsv.ProfesorDAOCSV;
 import dao.fcsv.ReservaDAOCSV;
-import dao.fdat.DepartamentoDAOFB;
-import dao.fdat.EspacioDAOFB;
-import dao.fdat.ProfesorDAOFB;
-import dao.fdat.ReservaDAOFB;
-import dao.fjson.DepartamentoDAOJS;
-import dao.fjson.EspacioDAOJS;
-import dao.fjson.ProfesorDAOJS;
-import dao.fjson.ReservaDAOJS;
+
 import javafx.application.Application;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -40,24 +33,19 @@ public class MainFX extends Application {
     @Override public void start(Stage stage){
         try{
             centro=new CentroEducativo(new DepartamentoDAOCSV(),new EspacioDAOCSV(),new ProfesorDAOCSV(),new ReservaDAOCSV());
-            //centro=new CentroEducativo(new DepartamentoDAOFB(),new EspacioDAOFB(),new ProfesorDAOFB(),new ReservaDAOFB());
-            //centro=new CentroEducativo(new DepartamentoDAOJS(),new EspacioDAOJS(),new ProfesorDAOJS(),new ReservaDAOJS());
+
         }catch(IOException e){ mostrarError("Error al cargar los CSV",e.getMessage()); return; }
-        // }catch(IOException e){ mostrarError("Error al cargar los ficheros binarios",e.getMessage()); return; }
-        //}catch(IOException e){ mostrarError("Error al cargar los ficheros JSON",e.getMessage()); return; }
+
         root.setTop(crearMenu()); root.setCenter(pantallaInicio());
         stage.setScene(new Scene(root,1100,680));
         stage.setTitle("Gestión de reservas - Centro Educativo (CSV)");
-        // stage.setTitle("Gestión de reservas - Centro Educativo (DAT)");
-        //stage.setTitle("Gestión de reservas - Centro Educativo (JSON)");
+
         stage.show();
     }
 
     private MenuBar crearMenu(){
         Menu archivo=new Menu("Archivo");
         MenuItem guardar=new MenuItem("Guardar datos CSV"); guardar.setOnAction(e->guardarDatos());
-        // MenuItem guardar=new MenuItem("Guardar datos binarios (.dat)"); guardar.setOnAction(e->guardarDatos());
-        //MenuItem guardar=new MenuItem("Guardar datos JSON"); guardar.setOnAction(e->guardarDatos());
         MenuItem salir=new MenuItem("Salir"); salir.setOnAction(e->System.exit(0)); archivo.getItems().addAll(guardar,salir);
 
         Menu dep=new Menu("Departamentos");
@@ -82,8 +70,6 @@ public class MainFX extends Application {
         VBox box=new VBox(12); box.setPadding(new Insets(30));
         Label t=new Label("GESTIÓN DE RESERVAS"); t.setStyle("-fx-font-size:28px;-fx-font-weight:bold;");
         Label s=new Label("Fuente de datos: ficheros CSV"); s.setStyle("-fx-font-size:16px;");
-        //Label s=new Label("Fuente de datos: ficheros binarios (.dat))"); s.setStyle("-fx-font-size:16px;");
-        //Label s=new Label("Fuente de datos: ficheros JSON"); s.setStyle("-fx-font-size:16px;");
         box.getChildren().addAll(t,s,new Label("Utilice el menú para gestionar departamentos, profesores, espacios y reservas."));
         return box;
     }
@@ -225,8 +211,6 @@ public class MainFX extends Application {
     private VBox formulario(String titulo,Control[] controles,String[] etiquetas){VBox b=new VBox(10);b.setPadding(new Insets(30));Label t=new Label(titulo);t.setStyle("-fx-font-size:22px;-fx-font-weight:bold;");b.getChildren().add(t);for(int i=0;i<controles.length;i++){if(i<etiquetas.length)b.getChildren().add(new Label(etiquetas[i]));b.getChildren().add(controles[i]);}return b;}
     private TextField campo(String prompt){TextField f=new TextField();f.setPromptText(prompt);return f;}
     private void guardarDatos(){try{centro.guardarTodo();mostrarInfo("Datos guardados correctamente en data/csv.");}catch(IOException e){mostrarError("Error al guardar",e.getMessage());}}
-    //private void guardarDatos(){try{centro.guardarTodo();mostrarInfo("Datos guardados correctamente en data/dat.");}catch(IOException e){mostrarError("Error al guardar",e.getMessage());}}
-    //private void guardarDatos(){try{centro.guardarTodo();mostrarInfo("Datos guardados correctamente en data/json.");}catch(IOException e){mostrarError("Error al guardar",e.getMessage());}}
     private void mostrarInfo(String m){new Alert(Alert.AlertType.INFORMATION,m,ButtonType.OK).showAndWait();}
     private void mostrarError(String titulo,String m){new Alert(Alert.AlertType.ERROR,m==null?"Error desconocido":m,ButtonType.OK).showAndWait();}
 }
